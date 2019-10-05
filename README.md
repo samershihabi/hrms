@@ -1,7 +1,7 @@
 
 # HRMS REST API Endpoints
 
-This repository contains the python3 code for a simple HRMS system. It contains 3 API endpoints, as is written in Flask-RESTful and MariaDB backend.
+This repository contains the python3 code for a simple HRMS system. It contains 3 API endpoints, and is written in Flask-RESTful and MariaDB backend.
 
 The python3 code is structured into classes, each class represents an API endpoint. app.py gives a high level view on how the endpoints are designed.
 
