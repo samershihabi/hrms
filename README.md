@@ -24,8 +24,10 @@ If you don't wish to use the swagger doc, app.py contains all the endpoints and 
 
 # Things to Improve
 
-Increase security of the API
+Increase security of the APIs
+
 Hosting the APIs and the database on a virtual private server for public access.
+
 Proper error Handling and Rollback on inserts and database transactions.
 
 Thanks!
