@@ -11,9 +11,12 @@ This repository also contains the YAML File for the Swagger (OpenAPI) interactiv
 
 # How to run the CODE
 
-1 - clone this repo and change directory to hrms 
+1 - clone this repo and change directory to hrms.
+
 3 - Install MariaDB locally. (The DB contains only 1 table called candidate_details)
+
 2 - type pip install -r requirements.txt in the command line to install the required dependencies.
+
 4 - type python app.py to start the server!
 
 The swagger doc contains all the required documentation and anyone can call the APIs directly through the interactive swagger doc.
