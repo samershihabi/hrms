@@ -1,0 +1,195 @@
+swagger: '2.0'
+info:
+  description: A simple HRMS
+  version: 1.0.0
+  title: HR Management System
+  # put the contact info for your development or API team
+  contact:
+    email: samershihabi94@gmail.com
+host: 0.0.0.0:5000
+schemes:
+  - http
+basePath: /hrms/v1
+
+
+tags:
+- name: Registration
+  description: APIs for user registration
+- name: Candidates
+  description: APIs admins to access candidates details
+
+paths:
+  /registrations:
+    post:
+      tags:
+      - Registration
+      summary: submits an application for candidates and uploads a resume
+      operationId: submitApplication
+      description: "submits an application and uploads a resume for a potential candidate"
+      produces:
+      - application/json
+      consumes:
+         - multipart/form-data
+      parameters:
+      - in: formData
+        name: resume
+        description: the resume file (accepted formats are .PDF and .DOCX)
+        required: true
+        type: file
+      - in: formData
+        name: full_name
+        description: candidate's full name in english
+        required: true
+        type: string
+      - in: formData
+        name: dob
+        description: candidate's date of birth in YYYY-MM-DD format
+        required: true
+        type: string
+      - in: formData
+        name: department
+        description: candidate's desired department (accepted departments are HR, IT, and FINANCE)
+        required: true
+        enum: [HR,IT,FINANCE]
+        type: string
+      - in: formData
+        name: years_of_experience
+        description: candidate's years of experience
+        required: true
+        type: number
+      responses:
+        201:
+          description: success
+          schema:
+              $ref: '#/definitions/registrationResponse'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        404:
+          description: not found
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /candidates:
+    get:
+      tags:
+      - Candidates
+      summary: gets a list of candidates in descending order by registration date
+      operationId: getCandidates
+      description: "gets a list of candidates in descending order by registration date, this API is only accessible by admins "
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: X-ADMIN
+        description: a header that authenticates admins
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+              $ref: '#/definitions/candidatesResponse'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        404:
+          description: not found
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /candidates/{candidate_id}:
+    get:
+      tags:
+      - Candidates
+      summary: gets a base64 encoded resume and downloads a decoded version of it locally
+      operationId: getCandidateAndDownloadResume
+      description: "gets a base64 encoded resume and downloads the resume locally for a specific candidate using the candidate_id from /candidates API"
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: X-ADMIN
+        description: a header that authenticates admins
+        required: true
+        type: string
+      - in: path
+        name: candidate_id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+              $ref: '#/definitions/candidateResponse'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        404:
+          description: not found
+          schema:
+            $ref: '#/definitions/errorResponse'
+definitions:
+  candidatesResponse:
+    type: object
+    properties:
+      metadata:
+        type: object
+        properties:
+          offset:
+            type: integer
+          limit:
+            type: integer
+          count:
+            type: integer
+          has_more:
+            type: integer
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            candidate_id:
+              type: integer
+            full_name:
+              type: string
+            dob:
+              type: string
+            department:
+              type: string
+            years_of_experience:
+              type: string
+            registration_date:
+              type: string
+  registrationResponse:
+    type: object
+    properties:
+      message:
+        type: object
+        properties:
+          success:
+            type: string
+            example: Record Created.
+  candidateResponse:
+    type: object
+    properties:
+      message:
+        type: object
+        properties:
+          success:
+            type: string
+            example: File Downloaded Successfully.
+          candidate_name:
+            type: string
+          base64:
+            type: string
+
+  errorResponse:
+    type: object
+    properties:
+      message:
+        type: object
+        properties:
+          error:
+            type: string
